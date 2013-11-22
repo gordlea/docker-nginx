@@ -18,22 +18,23 @@ if (argv.host !== undefined) {
 }
 var getDockerDetails = Promise.denodeify(docker.containers.inspect);
 var options = {}; // all options listed in the REST documentation for Docker are supported.
-var template = fs.readFileSync(__dirname + "/nginx_template", 'utf8');
-var outputPath = argv.outputPath ? argv.outputPath + '/' : "/etc/nginx/conf.d/"; 
+var templatePath = __dirname + "/nginx_template";
+console.log(templatePath)
+var template = fs.readFileSync(templatePath, 'utf8');
+var outputPath = argv.outputPath !== undefined ? argv.outputPath + '/' : "/etc/nginx/conf.d/"; 
+console.log(outputPath);
 docker.containers.list(options /* optional*/, function(err, containerList) {
     if (err) throw err;
     
     // console.log('Found %d containers, filtering', allContainers.length)
     var containers = _.filter(containerList, function(containerSummary) {
-    	console.dir(containerSummary.Ports)
     	return _.some(containerSummary.Ports, function(port) {
     		return port.PrivatePort === 80 && port.PublicPort !== undefined;
     	});
     });
     var promises = []
     _.forEach(containers, function(container) {
-    	var p = getDockerDetails(container.Id, function(err, details) {
-    		console.log(details);
+    	docker.containers.inspect(container.Id, function(err, details) {
     		var templateData = {
     			domain: details.Config.Hostname + '.' + details.Config.Domainname,
     			internal_port: details.NetworkSettings.Ports["80/tcp"][0].HostPort
@@ -42,18 +43,9 @@ docker.containers.list(options /* optional*/, function(err, containerList) {
     		var templateOutput = _.template(template, templateData);
     		fs.writeFileSync(outputPath + details.Config.Hostname + ".conf", templateOutput);
     	});
-    	p.then(function() {
-    		console.log("done of %s", container.Id)
-    	})
-    	promises.push(p)
-    	
-    	
-    });
-    Promise.all(promises).then(function(res) {
 
-    	console.log("done all");
-    	var code = sh.run('service nginx reload');
-    	process.exit(0);
+    	
+    	
     });
 
 });
