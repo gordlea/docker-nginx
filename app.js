@@ -11,7 +11,7 @@ var docker = null;
 if (argv.host !== undefined) {
 	console.log(argv.host)
 	docker = require('docker.io')({ socketPath: false, host: 'http://'+argv.host, port: '4243'});
-} else if (arv.socket !== undefined) {
+} else if (argv.socket !== undefined) {
 	docker = require('docker.io')({ socketPath: argv.socket });
 } else {
 	docker = require('docker.io')({ socketPath: '/var/run/docker.sock' });
