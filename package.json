@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {"docker-nginx": "./app.js"},
   "author": "Gord Lea <gord@bench.co>",
   "license": "BSD-2-Clause",
   "dependencies": {

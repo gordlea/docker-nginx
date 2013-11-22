@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var _ = require("underscore");
 var fs = require("fs");
 var argv = require('optimist').argv;
