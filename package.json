@@ -1,0 +1,19 @@
+{
+  "name": "docker-nginx",
+  "version": "0.0.1",
+  "description": "A tool to generate an nginx configuration based on currently running docker containers.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gord Lea <gord@bench.co>",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "docker.io": "~0.7.0",
+    "dot": "~1.0.2",
+    "underscore": "~1.5.2",
+    "optimist": "~0.6.0",
+    "promise": "~3.2.0",
+    "execSync": "~1.0.1-pre"
+  }
+}
