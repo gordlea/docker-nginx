@@ -18,7 +18,7 @@ if (argv.host !== undefined) {
 }
 var getDockerDetails = Promise.denodeify(docker.containers.inspect);
 var options = {}; // all options listed in the REST documentation for Docker are supported.
-var template = fs.readFileSync("nginx_template", 'utf8');
+var template = fs.readFileSync(__dirname + "/nginx_template", 'utf8');
 var outputPath = argv.outputPath ? argv.outputPath + '/' : "/etc/nginx/conf.d/"; 
 docker.containers.list(options /* optional*/, function(err, containerList) {
     if (err) throw err;
