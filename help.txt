@@ -1,0 +1,13 @@
+Usage: docker-nginx <options>
+In order to be detected by docker-nginx, a docker container has to be started with port:80 exposed internally, as well as with a hostname.
+
+Example: docker run -d -p 0.0.0.0::80 -h funky.example.com ubuntu
+
+With the above docker config, docker-nginx would generate funky.conf in /etc/nginx/conf.d and reload the nginx config. Combined with a wildcard dns, this can automatically bring up sites with a given domain name. 
+
+Options:
+   --help          display this help message
+   --hostname <ip> connect via tcp on port 4243
+   --socket <path> connect via socket (defaults to /var/run/docker.sock)
+   --outputPath	   defaults to /etc/nginx/conf.d/
+
