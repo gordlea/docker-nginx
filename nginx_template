@@ -5,6 +5,24 @@ server {
 
 
         location / {
-                proxy_pass http://localhost:<%=internal_port%>;
+        	proxy_pass http://localhost:<%=internal_port%>;
+			proxy_http_version 1.1;
         }
 }
+<% if (logio_port !== false) { %>
+server {
+    listen 81;
+    server_name <%=domain%>;
+    proxy_set_header Host <%=domain%>;
+
+
+    location / {
+    	proxy_pass http://localhost:<%=logio_port%>;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection $connection_upgrade;
+        auth_basic            "Restricted";
+        auth_basic_user_file  /etc/nginx/htpasswd;
+    }
+}
+<% } %> 

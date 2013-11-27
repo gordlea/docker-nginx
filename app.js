@@ -11,6 +11,7 @@ if (argv.help !== undefined) {
     console.log(help);
     return;
 }
+console.dir(argv);
 
 var docker = null;
 if (argv.host !== undefined) {
@@ -36,6 +37,7 @@ docker.containers.list(options /* optional*/, function(err, containerList) {
 
     	var result = _.some(containerSummary.Ports, function(port) {
             console.log("   has PrivatePort 80: %s", port.PrivatePort === 80);
+            console.log("   has PrivatePort 28778: %s", port.PrivatePort === 80);
             console.log("   has PublicPort != undefined: %s", port.PublicPort !== undefined);
     		return port.PrivatePort === 80 && port.PublicPort !== undefined;
     	});
@@ -46,9 +48,15 @@ docker.containers.list(options /* optional*/, function(err, containerList) {
     _.forEach(containers, function(container) {
     	docker.containers.inspect(container.Id, function(err, details) {
             // console.dir(details);
+            var logio_port = details.NetworkSettings.Ports["28778/tcp"];
+            var logio_port_number = false;
+            if (logio_port !== undefined && logio_port !== null) {
+                logio_port_number = logio_port[0].HostPort;
+            }
     		var templateData = {
     			domain: details.Config.Hostname + '.' + details.Config.Domainname,
-    			internal_port: details.NetworkSettings.Ports["80/tcp"][0].HostPort
+    			internal_port: details.NetworkSettings.Ports["80/tcp"][0].HostPort,
+                logio_port: logio_port_number 
     		}
 
     		var templateOutput = _.template(template, templateData);
